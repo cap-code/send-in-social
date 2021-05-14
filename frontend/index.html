@@ -1,0 +1,161 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>send in social</title>
+</head>
+<body>
+    <!-- heading -->
+    <div style="text-align: center;">
+        <h1>Connect with your user</h1>
+        <h3>engage with your supporters</h3>
+    </div>
+    <!-- creating new user (same as sign up ) -->
+    <div style="border-style: dashed;width:40%;padding-left: 20px;">
+        <h3>create user</h3>
+        <form id="createUser">
+            Name:<input type="text" name="name" placeholder="enter a name"/>
+            <p></p>
+            Email:<input type="email" name="email" placeholder="enter a email"/>
+            <button type="submit">Create</button>
+        </form>
+        APIKEY:<p id=apikey></p>
+        _ID:<p id="userId"></p>
+    </div>
+    <!-- getting the content to send from user -->
+    <p></p>
+
+
+    <form id="userContent" style="border-style: groove;width:40%;padding-left: 20px;">
+
+        <p></p>
+        <input type="text" name="id" id="id" placeholder="put your id here"/>
+        <p>id data will be given automatically in log in / log out process</p>
+        <label for="content">content</label>
+        <textarea id="content"name="content" placeholder="type your message here"></textarea>
+        <button type="submit">submit</button>
+    </form>
+
+
+    <!-- example form to be added on users customer page -->
+    <div style="text-align: center;">
+        <h3>sample form on your website</h3>
+        <form id="customer">
+            <label for="email">join our weekly newsletter</label>
+            <input type="text" name="em" id="email" placeholder="email"/>
+            <button type="submit">submit</button>
+            <p></p>
+            <label for="discord">discord</label>
+            <input type="checkbox"  id="discord" onclick="validate(discord)"/>
+            <input type="text" id="discordinput" name="di" placeholder="discord username" style="display: none;" />
+            <label for="email">twitter</label>
+            <input type="checkbox" id="twitter" onclick="validate(twitter)"/>
+            <input type="text" id="twitterinput" name="tw" placeholder="twitter username"  style="display: none;"/>
+            <label for="email">telegram</label>
+            <input type="checkbox" id="telegram" onclick="validate(telegram)" />
+            <input type="number" id="telegraminput" name="te" placeholder="enter your number"  style="display: none;" />
+            <style>
+                /* Chrome, Safari, Edge, Opera */
+                input::-webkit-outer-spin-button,
+                input::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+                  margin: 0;
+                }
+                
+                /* Firefox */
+                input[type=number] {
+                  -moz-appearance: textfield;
+                }
+                </style>
+        </form>
+        <p id="newsResponse"></p>
+        <script>
+            function validate(id){   
+                if(id.checked == 1){
+                   const inputform = document.getElementById(`${id.id}input`);
+                   inputform.style.display="";
+                }else{
+                    const inputform = document.getElementById(`${id.id}input`);
+                   inputform.style.display="none"; 
+                }
+            }
+
+            const newUser = document.getElementById('createUser');
+            newUser.addEventListener('submit',evt=>{
+                evt.preventDefault();
+                const formdata = new FormData(newUser);
+                const name = formdata.get('name');
+                const email = formdata.get('email');
+                const data ={
+                    name,
+                    email
+                };
+                fetch('http://localhost:3000/add',{
+                    method:'POST',
+                    headers:{
+                        'content-type':'application/json',
+                    },
+                    body:JSON.stringify(data)
+                })
+                .then(response=> response.json())
+                .then(data => {
+                    document.getElementById('apikey').textContent = data.apikey;
+                    document.getElementById('userId').textContent = data.id;
+                }).catch(err=>{console.log("error on generating api key in forntend")});
+            })
+
+            const userContent  = document.getElementById('userContent');
+            userContent.addEventListener('submit',evt=>{
+                evt.preventDefault();
+                const formdata = new FormData(userContent);
+                const id = formdata.get('id');
+                const content = formdata.get('content');
+                const data ={
+                    content,
+                    id
+                };
+                fetch('http://localhost:3000/content',{
+                    method:'POST',
+                    headers:{
+                        'content-type':'application/json',
+                    },
+                    body:JSON.stringify(data),
+                })
+            })
+            const customerForm = document.getElementById('customer');
+            customerForm.addEventListener('submit',evt=>{
+                evt.preventDefault();
+                const formdata = new FormData(customerForm);
+                const email = formdata.get('em');
+                const discord = formdata.get('di');
+                const twitter = formdata.get('tw');
+                const telegram = formdata.get('te');
+                const data={
+                    email,
+                    discord,
+                    twitter,
+                    telegram
+                }
+                fetch('http://localhost:3000/user/tom/apiKey/6J1XJ31-NQ64D6K-HT7A1KA-TJT6KN6',{
+                    method:'POST',
+                    headers:{
+                        'content-type':'application/json',
+                    },
+                    body:JSON.stringify(data),
+                }).then(response=>response.json())
+                .then(data =>{
+                   document.getElementById('newsResponse').textContent = data.msg;
+                }).catch(err=>{
+                    document.getElementById('newsResponse').textContent = err;
+                })
+                
+            })
+        </script>
+        <!-- documentation on how to create a post request -->
+        <p>create an api request from the form in the following form</p>
+        <code>http:localhost:3000/your_name/apikey/your_api_key</code>
+
+    </div>  
+</body>
+</html>

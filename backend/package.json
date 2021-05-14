@@ -1,0 +1,28 @@
+{
+  "name": "sendinsocial",
+  "version": "1.0.0",
+  "description": "daily newsletter redefined",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "newsletter",
+    "social",
+    "media",
+    "secure",
+    "direct",
+    "message"
+  ],
+  "author": "Advaith",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.6",
+    "mongoose": "^5.12.7",
+    "uuid-apikey": "^1.5.2"
+  }
+}
